@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kablo Kesiti Hesaplama</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: #1e1e1e;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, #2b2b2b 0%, #1a1a1a 100%);
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .header p {
+            color: #aaa;
+            font-size: 16px;
+        }
+        
+        .form-container {
+            padding: 25px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #ccc;
+            display: flex;
+            align-items: center;
+        }
+        
+        .input-group label i {
+            margin-right: 10px;
+            color: #4CAF50;
+        }
+        
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid #333;
+            background: #2c2c2c;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+        
+        button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(90deg, #4CAF50 0%, #2E7D32 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(90deg, #43A047 0%, #1B5E20 100%);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result {
+            padding: 20px;
+            margin-top: 20px;
+            background: #252525;
+            border-radius: 10px;
+            border-left: 5px solid #4CAF50;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .result h3 {
+            margin-bottom: 15px;
+            color: #4CAF50;
+            display: flex;
+            align-items: center;
+        }
+        
+        .result h3 i {
+            margin-right: 10px;
+        }
+        
+        .result p {
+            margin-bottom: 10px;
+            padding: 8px;
+            background: #2c2c2c;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .result span {
+            font-weight: 600;
+            color: #4CAF50;
+        }
+        
+        .error {
+            padding: 15px;
+            margin-top: 20px;
+            background: #352525;
+            border-radius: 10px;
+            border-left: 5px solid #F44336;
+            color: #F44336;
+            display: none;
+        }
+        
+        .error.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #333;
+            background: #1a1a1a;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .cable-info {
+            margin-top: 25px;
+            padding: 15px;
+            background: #252525;
+            border-radius: 10px;
+        }
+        
+        .cable-info h3 {
+            color: #aaa;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .cable-info h3 i {
+            margin-right: 10px;
+            color: #2196F3;
+        }
+        
+        .cable-info p {
+            color: #888;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading i {
+            color: #4CAF50;
+            font-size: 24px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-bolt"></i> Kablo Kesiti Hesaplama</h1>
+            <p>IEC 60364 ve TSE standartlarına göre kablo kesiti hesaplama aracı</p>
+        </div>
+        
+        <div class="form-container">
+            <div class="input-group">
+                <label for="power_kw"><i class="fas fa-tachometer-alt"></i> Cihaz Gücü (kW)</label>
+                <input type="number" id="power_kw" step="0.01" placeholder="Örnek: 10.5" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="phases"><i class="fas fa-plug"></i> Faz Sayısı</label>
+                <select id="phases" required>
+                    <option value="1">Monofaze (1 Faz)</option>
+                    <option value="3" selected>Trifaze (3 Faz)</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label for="voltage"><i class="fas fa-bolt"></i> Gerilim (V)</label>
+                <input type="number" id="voltage" value="400" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="voltage_drop"><i class="fas fa-chart-line"></i> İzin Verilen Gerilim Düşümü (%)</label>
+                <input type="number" id="voltage_drop" step="0.1" value="3" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="distance"><i class="fas fa-ruler"></i> Mesafe (metre)</label>
+                <input type="number" id="distance" step="0.1" placeholder="Örnek: 50.0" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="cable_type"><i class="fas fa-wire"></i> Kablo Tipi</label>
+                <select id="cable_type" required>
+                    <option value="NYY" selected>NYY</option>
+                    <option value="NYY-J">NYY-J</option>
+                    <option value="N2XH">N2XH</option>
+                    <option value="NHXMH">NHXMH</option>
+                </select>
+            </div>
+            
+            <button id="calculate-btn"><i class="fas fa-calculator"></i> HESAPLA</button>
+            
+            <div class="loading" id="loading">
+                <i class="fas fa-spinner"></i> Hesaplanıyor...
+            </div>
+            
+            <div class="result" id="result">
+                <h3><i class="fas fa-check-circle"></i> Hesaplama Sonuçları</h3>
+                <p>Hesaplanan Akım: <span id="current-result">0</span> A</p>
+                <p>Minimum Gerekli Kesit: <span id="min-section-result">0 mm²</span></p>
+                <p>Önerilen Standart Kesit: <span id="size-result">0 mm²</span></p>
+            </div>
+            
+            <div class="error" id="error">
+                <i class="fas fa-exclamation-circle"></i> <span id="error-text">Formda eksik alan var!</span>
+            </div>
+            
+            <div class="cable-info">
+                <h3><i class="fas fa-info-circle"></i> Kablo Tipleri Hakkında</h3>
+                <p><strong>NYY:</strong> PVC izoleli, PVC dış kılıflı, yeraltı kablosu</p>
+                <p><strong>NYY-J:</strong> PVC izoleli, PVC dış kılıflı, daha esnek yapıda</p>
+                <p><strong>N2XH:</strong> XLPE izoleli, PVC dış kılıflı, yangına dayanıklı</p>
+                <p><strong>NHXMH:</strong> Halojensiz, alev geciktirici özellikli kablo</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Directed by @hssahin | © 2025 Tüm Hakları Saksızdır!!!</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculateBtn = document.getElementById('calculate-btn');
+            const resultDiv = document.getElementById('result');
+            const errorDiv = document.getElementById('error');
+            const loadingDiv = document.getElementById('loading');
+            
+            // Hesaplama butonuna tıklama olayı
+            calculateBtn.addEventListener('click', function() {
+                // Değerleri al
+                const powerKw = parseFloat(document.getElementById('power_kw').value);
+                const phases = parseInt(document.getElementById('phases').value);
+                const voltage = parseFloat(document.getElementById('voltage').value);
+                const voltageDrop = parseFloat(document.getElementById('voltage_drop').value);
+                const distance = parseFloat(document.getElementById('distance').value);
+                const cableType = document.getElementById('cable_type').value;
+                
+                // Validasyon
+                if (!powerKw || !phases || !voltage || !voltageDrop || !distance || !cableType) {
+                    showError('Lütfen tüm alanları doldurun!');
+                    return;
+                }
+                
+                if (powerKw <= 0 || voltage <= 0 || voltageDrop <= 0 || distance <= 0) {
+                    showError('Lütfen pozitif değerler girin!');
+                    return;
+                }
+                
+                // Yükleme göster
+                loadingDiv.style.display = 'block';
+                errorDiv.classList.remove('show');
+                resultDiv.classList.remove('show');
+                
+                // Backend'e istek gönder
+                fetch('/calculate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        power_kw: powerKw,
+                        phases: phases,
+                        voltage: voltage,
+                        voltage_drop: voltageDrop,
+                        distance: distance,
+                        cable_type: cableType
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Yükleme gizle
+                    loadingDiv.style.display = 'none';
+                    
+                    if (data.error) {
+                        showError(data.error);
+                        return;
+                    }
+                    
+                    // Sonuçları göster
+                    document.getElementById('current-result').textContent = data.current;
+                    document.getElementById('min-section-result').textContent = data.min_section;
+                    document.getElementById('size-result').textContent = data.cable_size;
+                    showResult();
+                })
+                .catch(error => {
+                    loadingDiv.style.display = 'none';
+                    showError('Sunucu hatası: ' + error.message);
+                });
+            });
+            
+            // Hata göster fonksiyonu
+            function showError(message) {
+                document.getElementById('error-text').textContent = message;
+                errorDiv.classList.add('show');
+                resultDiv.classList.remove('show');
+                
+                // 5 saniye sonra hatayı gizle
+                setTimeout(() => {
+                    errorDiv.classList.remove('show');
+                }, 5000);
+            }
+            
+            // Sonuç göster fonksiyonu
+            function showResult() {
+                errorDiv.classList.remove('show');
+                resultDiv.classList.add('show');
+                
+                // Sonuca kaydır
+                resultDiv.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+</html>
